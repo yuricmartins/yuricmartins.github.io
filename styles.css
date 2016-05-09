@@ -66,3 +66,49 @@ a:hover {
 .menu a {
   margin-left: 32px;
 }
+
+<!-- About -->
+
+.description {
+  position: absolute;
+  width: 780px;
+  height: 100%;
+}
+
+h3 {
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 20px;
+  color: rgba(0,0,0,0.9);
+  letter-spacing: 1px;
+}
+
+.title {
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 16px;
+  color: rgba(0,0,0,0.9);
+  letter-spacing: 0.6px;
+}
+
+.company_name {
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 13px;
+  color: rgba(0,0,0,0.9);
+  letter-spacing: 0.6px;
+}
+
+.date {
+  font-family: "Roboto";
+  font-size: 13px;
+  color: rgba(0,0,0,0.3);
+  letter-spacing: 0.6px;
+}
+
+.text {
+  font-family: "Roboto";
+  font-size: 13px;
+  color: rgba(0,0,0,0.5);
+  letter-spacing: 0.6px;
+}
