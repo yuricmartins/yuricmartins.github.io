@@ -92,13 +92,13 @@ a:hover {
 
 .section_title {
   flex-grow: 1;
-  width: 50%;
+  width: 48%;
   flex-basis: auto;
 }
 
 .description {
   flex-grow: 1;
-  width: 50%;
+  width: 52%;
   flex-basis: auto;
   align-items: flex-end;
 }
