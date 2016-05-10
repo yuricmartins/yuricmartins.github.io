@@ -19,7 +19,7 @@
 
 h1 {
   font-size: 20pt;
-  color: rgba(0,0,0,0.9);
+  color: rgba(0,0,0,0.7);
   font-family: "Roboto", sans-serif;
   font-weight: bold;
   text-align: center;
@@ -43,6 +43,10 @@ a {
 }
 
 a:hover {
+  color: rgba(0,0,0,1);
+}
+
+.current_link {
   color: rgba(0,0,0,1);
 }
 
@@ -110,7 +114,7 @@ h3 {
   font-family: "Roboto";
   font-weight: bold;
   font-size: 20px;
-  color: rgba(0,0,0,0.8);
+  color: rgba(0,0,0,0.7);
   letter-spacing: 1px;
 }
 
@@ -118,16 +122,16 @@ h3 {
   font-family: "Roboto";
   font-weight: bold;
   font-size: 16px;
-  color: rgba(0,0,0,0.8);
+  color: rgba(0,0,0,0.7);
   letter-spacing: 0.6px;
   margin-bottom: 24px;
 }
 
 .company_name {
   font-family: "Roboto";
-  font-weight: bold;
+  font-weight: 500;
   font-size: 14px;
-  color: rgba(0,0,0,0.8);
+  color: rgba(0,0,0,0.7);
   letter-spacing: 0.6px;
   margin-bottom: 8px;
 }
