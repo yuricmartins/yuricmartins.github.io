@@ -1,5 +1,5 @@
-::-webkit-scrollbar { 
-  display: none; 
+html {
+  overflow-y: scroll;
 }
 
 .total {
