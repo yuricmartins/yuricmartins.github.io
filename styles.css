@@ -1,3 +1,7 @@
+body {
+  overflow:hidden;
+}
+
 .total {
   width: 100%;
   height: auto;
