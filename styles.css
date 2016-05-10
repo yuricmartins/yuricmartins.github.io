@@ -71,7 +71,8 @@ a:hover {
 }
 
 .menu a {
-  margin-left: 32px;
+  margin-left: 16px;
+  margin-right: 16px;
 }
 
 /* About*/
