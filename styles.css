@@ -159,3 +159,12 @@ h3 {
   line-height: 20px;
   margin-bottom: 64px;
 }
+
+.email {
+  font-family: "Roboto";
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(0,0,0,0.5);
+  letter-spacing: 0.6px;
+  line-height: 20px;
+}
