@@ -118,7 +118,7 @@ a:hover {
 h3 {
   font-family: "Roboto";
   font-weight: bold;
-  font-size: 16pt;
+  font-size: 18pt;
   color: rgba(0,0,0,0.7);
   letter-spacing: 1px;
 }
@@ -126,7 +126,7 @@ h3 {
 .title {
   font-family: "Roboto";
   font-weight: bold;
-  font-size: 14pt;
+  font-size: 12pt;
   color: rgba(0,0,0,0.7);
   letter-spacing: 0.6px;
   margin-bottom: 24px;
