@@ -98,6 +98,7 @@ a:hover {
   flex-grow: 1;
   width: 48%;
   flex-basis: auto;
+  margin-bottom: 48px;
 }
 
 .description {
