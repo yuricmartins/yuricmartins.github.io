@@ -82,7 +82,7 @@ a:hover {
 /* About*/
 
 .flex_container {
-  width: 60%;
+  width: 90%;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -120,7 +120,7 @@ h3 {
   font-weight: bold;
   font-size: 18pt;
   color: rgba(0,0,0,0.7);
-  letter-spacing: 1px;
+  letter-spacing: 1px;;
 }
 
 .title {
@@ -176,6 +176,10 @@ h3 {
     width: 52%;
     flex-basis: auto;
     align-items: flex-end;
+  }
+
+  .flex_container {
+    width: 60%;
   }
 }
 
