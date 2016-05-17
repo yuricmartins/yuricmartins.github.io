@@ -103,7 +103,6 @@ a:hover {
 
 .description {
   flex-grow: 1;
-  width: 52%;
   flex-basis: auto;
   align-items: flex-end;
 }
@@ -169,3 +168,14 @@ h3 {
   letter-spacing: 0.6px;
   line-height: 16pt;
 }
+
+@media (min-width: 800px) {
+  
+  .description {
+    flex-grow: 1;
+    width: 52%;
+    flex-basis: auto;
+    align-items: flex-end;
+  }
+}
+
