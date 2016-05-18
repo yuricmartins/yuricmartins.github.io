@@ -105,6 +105,7 @@ a:hover {
   flex-grow: 1;
   flex-basis: auto;
   align-items: flex-end;
+  margin-top: 7px;
 }
 
 .separator {
