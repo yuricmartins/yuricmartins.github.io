@@ -58,7 +58,7 @@ a:hover {
   width: 100%;
   margin: 0 auto;
   position: fixed;
-  padding: 16px 0;
+  padding: 40px 0;
   background: white;
 }
 
@@ -175,7 +175,7 @@ h3 {
 .flex-work {
   display: flex;
   width: 100%;
-  margin-top: 45px;
+  margin-top: 93px;
 }
 
 .project {
