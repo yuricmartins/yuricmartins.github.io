@@ -82,7 +82,7 @@ a:hover {
 /* About*/
 
 .flex_container {
-  width: 90%;
+  width: 60%;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -103,9 +103,9 @@ a:hover {
 
 .description {
   flex-grow: 1;
+  width: 52%;
   flex-basis: auto;
   align-items: flex-end;
-  margin-top: 7px;
 }
 
 .separator {
@@ -170,36 +170,89 @@ h3 {
   line-height: 16pt;
 }
 
-@media (min-width: 800px) {
-
-  .description {
-    flex-grow: 1;
-    width: 52%;
-    flex-basis: auto;
-    align-items: flex-end;
-  }
-
-  .flex_container {
-    width: 60%;
-  }
-}
-
 
 /*Work*/
 
 .flex-work {
   display: flex;
   width: 100%;
+  flex-flow: row wrap;
   margin-top: 93px;
 }
 
 .project {
-  flex-basis: 33.33%;
-  max-width:100%;
-  max-height:100%;
+  margin: 0 0;
+  flex: 1;
+  position: relative;
+  flex-basis: 33%;
+}
+
+.project a {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+  line-height: 0;
 }
 
 .project-img {
   max-width:100%;
   max-height:100%;
+}
+
+
+@media screen /*Cellphones*/
+  and (min-width: 320px)
+  and (max-width: 768px) {
+ 
+.menu {
+  padding: 16px 0;
+}
+
+.flex_container {
+  width: 90%;
+}
+
+.section_title {
+  min-width: 320px;
+}
+
+.description {
+  flex-grow: 1;
+  flex-basis: auto;
+  align-items: flex-end;
+  margin-top: 7px;
+}
+
+.flex-work {
+  margin-top: 45px;
+}
+
+.project {
+  flex-basis: 100%;
+}
+}
+
+@media screen /*Tablets*/
+  and (min-width: 768px)
+  and (max-width: 1024px) {
+
+ .menu {
+    padding: 24px 0;
+  }
+
+.flex-work {
+  margin-top: 61px;
+}
+
+.description {
+  flex-grow: 1;
+  flex-basis: auto;
+  align-items: flex-end;
+  margin-top: 7px;
+}
+
+  .project {
+    flex-basis: 50%;
+  }
 }
