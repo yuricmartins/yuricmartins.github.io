@@ -88,8 +88,7 @@ a:hover {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   margin: auto;
   margin-top: 93px;
 }
@@ -200,10 +199,31 @@ h3 {
   max-height:100%;
 }
 
+@media screen and (max-width: 1024px) {
 
-@media screen /*Cellphones*/
-  and (min-width: 320px)
-  and (max-width: 768px) {
+.menu {
+  padding: 24px 0;
+}
+
+.flex_container {
+  width: 90%;
+  margin-top: 80px;
+}
+
+.description {
+  margin-top: 7px;
+}
+
+.flex-work {
+  margin-top: 61px;
+}
+
+.project {
+  flex-basis: 50%;
+}
+}
+
+@media screen and (max-width: 768px) {
  
 .menu {
   padding: 16px 0;
@@ -211,17 +231,16 @@ h3 {
 
 .flex_container {
   width: 90%;
+  margin-top: 80px;
 }
 
 .section_title {
-  min-width: 320px;
+  width: 90%;
 }
 
 .description {
-  flex-grow: 1;
-  flex-basis: auto;
-  align-items: flex-end;
   margin-top: 7px;
+  width: 90%;
 }
 
 .flex-work {
@@ -231,28 +250,4 @@ h3 {
 .project {
   flex-basis: 100%;
 }
-}
-
-@media screen /*Tablets*/
-  and (min-width: 768px)
-  and (max-width: 1024px) {
-
- .menu {
-    padding: 24px 0;
-  }
-
-.flex-work {
-  margin-top: 61px;
-}
-
-.description {
-  flex-grow: 1;
-  flex-basis: auto;
-  align-items: flex-end;
-  margin-top: 7px;
-}
-
-  .project {
-    flex-basis: 50%;
-  }
 }
