@@ -91,7 +91,7 @@ a:hover {
   flex-direction: row;
   flex-wrap: wrap;
   margin: auto;
-  margin-top: 15%;
+  margin-top: 93px;
 }
 
 .section_title {
@@ -170,6 +170,21 @@ h3 {
   line-height: 16pt;
 }
 
+@media (min-width: 800px) {
+
+  .description {
+    flex-grow: 1;
+    width: 52%;
+    flex-basis: auto;
+    align-items: flex-end;
+  }
+
+  .flex_container {
+    width: 60%;
+  }
+}
+
+
 /*Work*/
 
 .flex-work {
@@ -188,18 +203,3 @@ h3 {
   max-width:100%;
   max-height:100%;
 }
-
-@media (min-width: 800px) {
-  
-  .description {
-    flex-grow: 1;
-    width: 52%;
-    flex-basis: auto;
-    align-items: flex-end;
-  }
-
-  .flex_container {
-    width: 60%;
-  }
-}
-
