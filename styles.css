@@ -81,7 +81,7 @@ a:hover {
 
 /* About*/
 
-.flex_container {
+.about-flex {
   width: 60%;
   display: -webkit-box;
   display: -moz-box;
@@ -93,14 +93,14 @@ a:hover {
   margin-top: 93px;
 }
 
-.section_title {
+.about-section {
   flex-grow: 1;
   width: 48%;
   flex-basis: auto;
   margin-bottom: 48px;
 }
 
-.description {
+.about-section-text {
   flex-grow: 1;
   width: 52%;
   flex-basis: auto;
@@ -199,12 +199,6 @@ h3 {
   max-height:100%;
 }
 
-.work-project-img:hover {
-  color: black;
-  width: 100%;
-  height: 100%;
-}
-
 
 /* Projects*/
 
@@ -222,14 +216,12 @@ h3 {
 
 .project-description {
   flex-grow: 1;
-  width: 35%;
-  flex-basis: auto;
+  flex-basis: 35%;
 }
 
 .project-images {
   flex-grow: 2;
-  width: 65%;
-  flex-basis: auto;
+  flex-basis: 65%;
   align-items: flex-end;
 }
 
@@ -241,27 +233,6 @@ h3 {
 
 .project-description h3 {
   margin-bottom: 48px;
-}
-
-.project-section {
-  font-family: "Roboto";
-  font-weight: bold;
-  font-size: 12pt;
-  color: rgba(0,0,0,0.7);
-  letter-spacing: 0.6px;
-  margin-bottom: 8px;
-  margin-top: 40px;
-}
-
-.project-section-text {
-  font-family: "Roboto";
-  font-size: 10pt;
-  font-weight: 300;
-  color: rgba(0,0,0,0.5);
-  letter-spacing: 0.6px;
-  line-height: 20px;
-  margin-bottom: 40px;
-  padding-right: 40px;
 }
 
 .project-client {
@@ -300,6 +271,28 @@ h3 {
   margin-bottom: 32px;
 }
 
+.project-section {
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 12pt;
+  color: rgba(0,0,0,0.7);
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
+  margin-top: 40px;
+}
+
+.project-section-text {
+  font-family: "Roboto";
+  font-size: 10pt;
+  font-weight: 300;
+  color: rgba(0,0,0,0.5);
+  letter-spacing: 0.6px;
+  line-height: 20px;
+  margin-bottom: 40px;
+  padding-right: 40px;
+}
+
+
 .project-work-flex {
   display: flex;
   width: 100%;
@@ -314,21 +307,29 @@ h3 {
   padding: 24px 0;
 }
 
-.flex_container {
+.about-flex {
   width: 90%;
   margin-top: 80px;
 }
 
-.description {
+.about-section-text {
   margin-top: 7px;
 }
 
-.flex-work {
+.work-flex {
   margin-top: 61px;
 }
 
-.project {
+.work-project {
   flex-basis: 50%;
+}
+
+.project-description {
+  flex-basis: 100%;
+}
+
+.project-images {
+  flex-basis: 100%;
 }
 }
 
@@ -338,25 +339,42 @@ h3 {
   padding: 16px 0;
 }
 
-.flex_container {
+.about-flex {
   width: 90%;
   margin-top: 80px;
 }
 
-.section_title {
+.about-section {
   width: 90%;
 }
 
-.description {
+.about-section-text {
   margin-top: 7px;
   width: 90%;
 }
 
-.flex-work {
+.work-flex {
   margin-top: 45px;
 }
 
-.project {
+.work-project {
   flex-basis: 100%;
 }
+
+.project-flex {
+  width: 100%;
 }
+
+.project-description {
+  margin-left: 16px;
+}
+
+.image {
+  margin-bottom: 0px;
+}
+
+.project-work-flex {
+  margin-top: 40px;
+}
+}
+
