@@ -185,6 +185,7 @@ h3 {
   flex: 1;
   flex-basis: 33.333333%;
   position: relative;
+  line-height: 0;
 }
 
 .work-project-img {
