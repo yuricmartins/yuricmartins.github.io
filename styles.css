@@ -60,6 +60,7 @@ a:hover {
   position: fixed;
   padding: 40px 0;
   background: white;
+  z-index: 1;
 }
 
 .menu ul {
