@@ -182,16 +182,8 @@ h3 {
 .work-project {
   margin: 0 0;
   flex: 1;
+  flex-basis: 33.333333%;
   position: relative;
-  flex-basis: 33%;
-}
-
-.work-project a {
-  position: relative;
-  top: 0;
-  left: 0;
-  display: block;
-  line-height: 0;
 }
 
 .work-project-img {
@@ -199,6 +191,44 @@ h3 {
   max-height:100%;
 }
 
+.work-project-mask {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  opacity: 0;
+  transition: 0.2s ease-in-out;
+}
+
+.work-project-link {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  position: relative;
+  opacity: 0;
+  transition: 0.2s ease-in-out;
+}
+
+.work-project-title {
+  width: 100%;
+  top: 45%;
+  left: 0;
+  position: absolute;
+  transition: 0.2s ease-in-out;
+  font-family: Roboto;
+  font-size: 16pt;
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: 6px;
+  line-height: 30px;
+  padding: 0 10px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.work-project-mask:hover {
+  opacity: 1;
+}
 
 /* Projects*/
 
@@ -324,6 +354,10 @@ h3 {
   flex-basis: 50%;
 }
 
+.project-flex {
+  margin-top: 80px;
+}
+
 .project-description {
   flex-basis: 100%;
 }
@@ -337,11 +371,6 @@ h3 {
  
 .menu {
   padding: 16px 0;
-}
-
-.about-flex {
-  width: 90%;
-  margin-top: 80px;
 }
 
 .about-section {
