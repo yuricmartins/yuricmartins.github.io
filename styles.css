@@ -248,12 +248,12 @@ h3 {
 
 .project-description {
   flex-grow: 1;
-  flex-basis: 35%;
+  flex-basis: 25%;
 }
 
 .project-images {
   flex-grow: 2;
-  flex-basis: 65%;
+  flex-basis: 75%;
   align-items: flex-end;
 }
 
@@ -306,7 +306,7 @@ h3 {
 .project-section {
   font-family: "Roboto";
   font-weight: bold;
-  font-size: 12pt;
+  font-size: 11pt;
   color: rgba(0,0,0,0.7);
   letter-spacing: 0.6px;
   margin-bottom: 8px;
