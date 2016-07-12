@@ -280,6 +280,78 @@ h3 {
   background: #F6F6F6;
 }
 
+.project-images-3 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #2E343B;
+}
+
+.project-images-4 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #A261C4;
+}
+
+.project-images-5 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #D9D9D9;
+}
+
+.project-images-6 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #4C4C4C;
+}
+
+.project-images-7 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #63D0DF;
+}
+
+.project-images-8 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #00607E;
+}
+
+.project-images-9 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #D9D9D9;
+}
+
+.project-images-10 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #82CCC5;
+}
+
+.project-images-11 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #8AD4F4;
+}
+
+.project-images-12 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #B29FCB;
+}
+
+.project-images-13 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #ED9D9D;
+}
+
+.project-images-14 {
+  flex-grow: 1;
+  flex-basis: 100%;
+  background: #67D7E5;
+}
+
 .image {
   max-width: 90%;
   margin-bottom: 0px;
@@ -313,7 +385,7 @@ h3 {
   color: rgba(0,0,0,0.7);
   letter-spacing: 0.6px;
   margin-bottom: 24px;
-  margin-top: 80px;
+  margin-top: 60px;
   text-align: center;
 }
 
