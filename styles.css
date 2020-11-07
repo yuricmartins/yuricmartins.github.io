@@ -1,5 +1,7 @@
 html { 
   overflow-y: scroll;
+  /* mobile viewport bug fix */
+  -webkit-fill-available
 }
 
 body {
@@ -8,6 +10,7 @@ body {
   font-weight: 300;
   font-size: 0.875rem;
   line-height: 1rem;
+  /* mobile viewport bug fix */
 }
 
 .layout {
