@@ -1,8 +1,7 @@
 html { 
   overflow-y: scroll;
   /* mobile viewport bug fix */
-  -webkit-fill-available
-}
+  height: -webkit-fill-available;}
 
 body {
   background-color: rgba(212,212,216,1);
@@ -11,6 +10,8 @@ body {
   font-size: 0.875rem;
   line-height: 1rem;
   /* mobile viewport bug fix */
+  min-height: -webkit-fill-available;
+
 }
 
 .layout {
