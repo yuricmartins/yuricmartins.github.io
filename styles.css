@@ -11,6 +11,7 @@ body {
   font-size: 0.875rem;
   line-height: 1rem;
   /* mobile viewport bug fix */
+  min-height: 100vh;
   min-height: -webkit-fill-available;
 }
 
@@ -21,7 +22,9 @@ body {
   column-gap: 24px;
   margin: 0 auto;
   max-width: 800px;
-  height: 100vh;
+  min-height: 100vh;
+  /* mobile viewport bug fix */
+  min-height: -webkit-fill-available;
 }
 
 .name {
