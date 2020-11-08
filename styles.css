@@ -22,7 +22,7 @@ body {
   column-gap: 24px;
   margin: 0 auto;
   max-width: 800px;
-  min-height: 100vh;
+  height: 100vh;
   /* mobile viewport bug fix */
   min-height: -webkit-fill-available;
 }
