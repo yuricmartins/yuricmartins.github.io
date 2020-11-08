@@ -1,7 +1,5 @@
 html { 
   overflow-y: scroll;
-  /* mobile viewport bug fix */
-  height: -webkit-fill-available;
 }
 
 body {
@@ -10,9 +8,6 @@ body {
   font-weight: 300;
   font-size: 0.875rem;
   line-height: 1rem;
-  /* mobile viewport bug fix */
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
 }
 
 .layout {
@@ -23,8 +18,7 @@ body {
   margin: 0 auto;
   max-width: 800px;
   height: 100vh;
-  /* mobile viewport bug fix */
-  min-height: -webkit-fill-available;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 .name {
