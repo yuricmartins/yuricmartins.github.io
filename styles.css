@@ -138,10 +138,6 @@ li {
     align-self: center;
   }
 
-  a {
-    display: block;
-  }
-  
   li {
     float: left;
   }
