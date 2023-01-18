@@ -50,6 +50,7 @@ a:hover {
 
 em {
   font-family: 'Source Serif Pro', serif;
+  font-style: italic;
   font-size: 0.96875rem;
   line-height: 1.125rem;
 }
@@ -74,7 +75,6 @@ em {
   }
 
   em {
-    font-family: 'Source Serif Pro', serif;
     font-size: 1.1875rem;
     line-height: 1.4375rem;
   }
