@@ -13,11 +13,7 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
-  -webkit-animation: fade-in 1s ease 0s 1 forwards; /* Safari, Chrome and Opera > 12.1 */
-     -moz-animation: fade-in 1s ease 0s 1 forwards; /* Firefox < 16 */
-      -ms-animation: fade-in 1s ease 0s 1 forwards; /* Internet Explorer */
-       -o-animation: fade-in 1s ease 0s 1 forwards; /* Opera < 12.1 */
-          animation: fade-in 1s ease 0s 1 forwards;
+  animation: fade-in 1s ease 0s 1 forwards;
 }
 
 @keyframes fade-in {
