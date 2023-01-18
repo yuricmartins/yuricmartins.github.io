@@ -57,6 +57,7 @@ em {
 @media screen and (max-width: 600px) {
 
   body {
+    font-family: 'Inter', sans-serif;
     font-size: 1.125rem;
     line-height: 1.4375rem;
   }
@@ -73,6 +74,7 @@ em {
   }
 
   em {
+    font-family: 'Source Serif Pro', serif;
     font-size: 1.1875rem;
     line-height: 1.4375rem;
   }
