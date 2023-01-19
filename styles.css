@@ -60,6 +60,10 @@ a:hover {
   color: rgba(240,240,240,0.7);
 }
 
+.icon {
+  fill: rgba(255,255,255,0.5);
+}
+
 em {
   font-family: 'Source Serif Pro', serif;
   font-style: italic;
@@ -90,4 +94,25 @@ em {
     font-size: 1.25rem;
     line-height: 1.4375rem;
   }
+  
+@media (prefers-color-scheme: light) {
+  
+  body {
+    background-color: #FDFDFD;
+    color: rgba(0,0,0,1);
+  }
+
+  a {
+    text-decoration: none;
+    color: rgba(0,0,0,1);
+  }
+  
+  a:hover {
+    color: rgba(0,0,0,0.7);
+  }
+
+  .icon {
+    fill: rgba(0,0,0,0.4);
+  }
+}
 }
