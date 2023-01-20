@@ -13,18 +13,6 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
-  animation: fade-in 1s ease 0s 1 forwards;
-}
-
-@keyframes fade-in {
-  0% {
-      opacity: 0;
-      transform: translateY(16px);
-  }
-  100% {
-      opacity: 1;
-      transform: translateY(0px);
-  }
 }
 
 .content {
@@ -37,11 +25,35 @@ body {
 
 .intro{
   padding-bottom: 48px;
+  animation: intro-fade-in 1s ease 0s 1 forwards;
+}
+
+@keyframes intro-fade-in {
+  0% {
+      opacity: 0;
+      transform: translateY(16px);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0px);
+  }
 }
 
 .links {
   display: flex;
   gap: 24px;
+  animation: links-fade-in 1s ease 0s 1 forwards;
+}
+
+@keyframes links-fade-in {
+  0% {
+      opacity: 0;
+      transform: translateY(16px);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0px);
+  }
 }
 
 .link {
