@@ -1,0 +1,33 @@
+name: Update World Cup Scores
+
+on:
+  schedule:
+    - cron: '0 7 * * *'   # 07:00 UTC daily (covers overnight European/American games)
+  workflow_dispatch:        # also triggerable manually from the Actions tab
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch scores and update HTML
+        env:
+          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+        run: python scripts/update_scores.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add world-cup.html
+          git diff --cached --quiet \
+            && echo "Nothing to commit." \
+            || git commit -m "chore: update World Cup scores [skip ci]"
+
+      - name: Push
+        run: git push origin master
