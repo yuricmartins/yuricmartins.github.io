@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Cup 2026 — Draw Tracker</title>
+  <style>
+    :root {
+      --bg: #0d1b2a;
+      --surface: #162437;
+      --surface2: #1e3250;
+      --border: #243d5e;
+      --text: #dde6f0;
+      --dim: #6a8fad;
+      --gold: #f59e0b;
+      --silver: #94a3b8;
+      --bronze: #b97b3d;
+      --win: #22c55e;
+      --draw: #f59e0b;
+      --loss: #ef4444;
+
+      --aran:   #f87171;
+      --yuri:   #60a5fa;
+      --claudia:#c084fc;
+      --clara:  #fb923c;
+      --kris:   #4ade80;
+      --janki:  #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(180deg, #1a2e48 0%, #0d1b2a 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 24px 20px 20px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.9rem; font-weight: 900; color: var(--gold); letter-spacing: -.5px; }
+    header p  { color: var(--dim); font-size: .88rem; margin-top: 4px; }
+
+    /* ── Layout ── */
+    .page { max-width: 1080px; margin: 0 auto; padding: 24px 16px; display: grid; gap: 28px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 14px 20px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-weight: 800;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Leaderboard ── */
+    .lb-row {
+      display: grid;
+      grid-template-columns: 44px 1fr 70px 80px;
+      align-items: center;
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: background .1s;
+    }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-row:hover { background: rgba(255,255,255,.03); }
+
+    .lb-rank { font-size: 1.4rem; font-weight: 900; color: var(--dim); }
+    .lb-rank.r1 { color: var(--gold); }
+    .lb-rank.r2 { color: var(--silver); }
+    .lb-rank.r3 { color: var(--bronze); }
+
+    .lb-info {}
+    .lb-name { font-weight: 800; font-size: 1rem; }
+    .lb-wdl  { font-size: .72rem; color: var(--dim); margin-top: 1px; }
+
+    .lb-bar-wrap { height: 5px; background: rgba(255,255,255,.07); border-radius: 3px; margin-top: 4px; }
+    .lb-bar { height: 5px; border-radius: 3px; transition: width .6s ease; }
+
+    .lb-pts  { text-align: right; font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+    .lb-pts-label { text-align: right; font-size: .7rem; color: var(--dim); margin-top: 1px; }
+
+    /* ── Match cards ── */
+    .day-label {
+      padding: 10px 16px 4px;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--dim);
+    }
+
+    .match {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .match:last-child { border-bottom: none; }
+    .match.today-match {
+      background: rgba(245,158,11,.07);
+      border-left: 3px solid var(--gold);
+    }
+
+    .match-team { display: flex; align-items: center; gap: 7px; }
+    .match-team.away { justify-content: flex-end; flex-direction: row-reverse; }
+
+    .flag { font-size: 1.35rem; line-height: 1; }
+
+    .tm-name { font-weight: 700; font-size: .88rem; line-height: 1.2; }
+    .tm-owner {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-top: 2px;
+      opacity: .85;
+    }
+
+    .match-center { text-align: center; }
+    .score { font-size: 1.25rem; font-weight: 900; letter-spacing: 1px; }
+    .score-group { font-size: .65rem; color: var(--dim); margin-top: 2px; }
+    .live-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: #000;
+      font-size: .65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
+    .vs { font-size: .9rem; color: var(--dim); }
+
+    /* ── Team breakdown ── */
+    .player-card .card-head { color: #fff; }
+
+    .team-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: .85rem;
+    }
+    .team-row:last-child { border-bottom: none; }
+    .team-left { display: flex; align-items: center; gap: 6px; }
+
+    .pts-badge {
+      font-weight: 800;
+      font-size: .8rem;
+      min-width: 28px;
+      text-align: right;
+    }
+    .pts-badge.win  { color: var(--win); }
+    .pts-badge.draw { color: var(--draw); }
+    .pts-badge.loss { color: var(--loss); }
+    .pts-badge.tbd  { color: var(--dim); }
+
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-dot.win  { background: var(--win); }
+    .status-dot.draw { background: var(--draw); }
+    .status-dot.loss { background: var(--loss); }
+    .status-dot.tbd  { background: var(--dim); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      color: var(--dim);
+      font-size: .75rem;
+      padding: 24px 16px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>&#x26BD; World Cup 2026 — Draw Tracker</h1>
+  <p>Group Stage &middot; June 11 – 27, 2026 &middot; Updated June 17</p>
+</header>
+
+<div class="page">
+  <div id="leaderboard-wrap"></div>
+  <div id="today-wrap"></div>
+  <div id="upcoming-wrap"></div>
+  <div id="results-wrap"></div>
+  <div id="players-wrap"></div>
+</div>
+
+<footer>
+  Points: Win = 3 &middot; Draw = 1 &middot; Loss = 0 &nbsp;|&nbsp; Scores from each player's teams are accumulated.
+</footer>
+
+<script>
+/* ════════════════════════════════
+   DATA
+════════════════════════════════ */
+const OWNERS = {
+  Aran:   { color: '#f87171', teams: ['Ivory Coast','Germany','Haiti','Switzerland','Jordan','Ecuador','Colombia','Ghana'] },
+  Yuri:   { color: '#60a5fa', teams: ['Croatia','Sweden','Senegal','Austria','Brazil','England','Scotland','Saudi Arabia'] },
+  Claudia:{ color: '#c084fc', teams: ['Netherlands','Türkiye','Cape Verde','Australia','Spain','Argentina','Curaçao','Algeria'] },
+  Clara:  { color: '#fb923c', teams: ['Egypt','Paraguay','Iran','Tunisia','USA','DR Congo','Iraq','Portugal'] },
+  Kris:   { color: '#4ade80', teams: ['South Africa','Belgium','Morocco','Japan','Panama','Czechia','Bosnia','Canada'] },
+  Janki:  { color: '#fbbf24', teams: ['Qatar','New Zealand','South Korea','Uzbekistan','Uruguay','Norway','France','Mexico'] },
+};
+
+const FLAGS = {
+  'Ivory Coast':'🇨🇮','Germany':'🇩🇪','Haiti':'🇭🇹','Switzerland':'🇨🇭','Jordan':'🇯🇴',
+  'Ecuador':'🇪🇨','Colombia':'🇨🇴','Ghana':'🇬🇭','Croatia':'🇭🇷','Sweden':'🇸🇪',
+  'Senegal':'🇸🇳','Austria':'🇦🇹','Brazil':'🇧🇷','England':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'Saudi Arabia':'🇸🇦','Netherlands':'🇳🇱','Türkiye':'🇹🇷','Cape Verde':'🇨🇻',
+  'Australia':'🇦🇺','Spain':'🇪🇸','Argentina':'🇦🇷','Curaçao':'🇨🇼','Algeria':'🇩🇿',
+  'Egypt':'🇪🇬','Paraguay':'🇵🇾','Iran':'🇮🇷','Tunisia':'🇹🇳','USA':'🇺🇸',
+  'DR Congo':'🇨🇩','Iraq':'🇮🇶','Portugal':'🇵🇹','South Africa':'🇿🇦','Belgium':'🇧🇪',
+  'Morocco':'🇲🇦','Japan':'🇯🇵','Panama':'🇵🇦','Czechia':'🇨🇿','Bosnia':'🇧🇦',
+  'Canada':'🇨🇦','Qatar':'🇶🇦','New Zealand':'🇳🇿','South Korea':'🇰🇷','Uzbekistan':'🇺🇿',
+  'Uruguay':'🇺🇾','Norway':'🇳🇴','France':'🇫🇷','Mexico':'🇲🇽',
+};
+
+// status: 'done' | 'today' | 'upcoming'
+// homeGoals / awayGoals: number or null
+const MATCHES = [
+  // ── ROUND 1 ──────────────────────────────────────────
+  {date:'Jun 11',grp:'A',home:'Mexico',       away:'South Africa', hg:2,ag:0,s:'done'},
+  {date:'Jun 11',grp:'A',home:'South Korea',  away:'Czechia',      hg:2,ag:1,s:'done'},
+  {date:'Jun 12',grp:'B',home:'Canada',       away:'Bosnia',       hg:1,ag:1,s:'done'},
+  {date:'Jun 13',grp:'B',home:'Qatar',        away:'Switzerland',  hg:1,ag:1,s:'done'},
+  {date:'Jun 13',grp:'C',home:'Brazil',       away:'Morocco',      hg:1,ag:1,s:'done'},
+  {date:'Jun 13',grp:'D',home:'USA',          away:'Paraguay',     hg:4,ag:1,s:'done'},
+  {date:'Jun 14',grp:'C',home:'Scotland',     away:'Haiti',        hg:1,ag:0,s:'done'},
+  {date:'Jun 14',grp:'D',home:'Australia',    away:'Türkiye',      hg:2,ag:0,s:'done'},
+  {date:'Jun 14',grp:'F',home:'Netherlands',  away:'Japan',        hg:2,ag:2,s:'done'},
+  {date:'Jun 14',grp:'E',home:'Germany',      away:'Curaçao',      hg:7,ag:1,s:'done'},
+  {date:'Jun 15',grp:'E',home:'Ivory Coast',  away:'Ecuador',      hg:1,ag:0,s:'done'},
+  {date:'Jun 15',grp:'F',home:'Sweden',       away:'Tunisia',      hg:5,ag:1,s:'done'},
+  {date:'Jun 15',grp:'H',home:'Spain',        away:'Cape Verde',   hg:0,ag:0,s:'done'},
+  {date:'Jun 15',grp:'G',home:'Belgium',      away:'Egypt',        hg:1,ag:1,s:'done'},
+  {date:'Jun 15',grp:'H',home:'Saudi Arabia', away:'Uruguay',      hg:1,ag:1,s:'done'},
+  {date:'Jun 15',grp:'G',home:'Iran',         away:'New Zealand',  hg:2,ag:2,s:'done'},
+  {date:'Jun 16',grp:'J',home:'Argentina',    away:'Algeria',      hg:3,ag:0,s:'done'},
+  {date:'Jun 16',grp:'J',home:'Austria',      away:'Jordan',       hg:3,ag:1,s:'done'},
+  {date:'Jun 16',grp:'I',home:'France',       away:'Senegal',      hg:3,ag:1,s:'done'},
+  {date:'Jun 16',grp:'I',home:'Norway',       away:'Iraq',         hg:4,ag:1,s:'done'},
+  // ── TODAY (June 17) ──────────────────────────────────
+  {date:'Jun 17',grp:'K',home:'Portugal',     away:'DR Congo',     hg:null,ag:null,s:'today'},
+  {date:'Jun 17',grp:'K',home:'Uzbekistan',   away:'Colombia',     hg:null,ag:null,s:'today'},
+  {date:'Jun 17',grp:'L',home:'England',      away:'Croatia',      hg:null,ag:null,s:'today'},
+  {date:'Jun 17',grp:'L',home:'Ghana',        away:'Panama',       hg:null,ag:null,s:'today'},
+  // ── ROUND 2 ──────────────────────────────────────────
+  {date:'Jun 18',grp:'A',home:'Czechia',      away:'South Africa', hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 18',grp:'A',home:'Mexico',       away:'South Korea',  hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 18',grp:'B',home:'Canada',       away:'Qatar',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 18',grp:'B',home:'Switzerland',  away:'Bosnia',       hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 19',grp:'C',home:'Brazil',       away:'Haiti',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 19',grp:'C',home:'Scotland',     away:'Morocco',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 19',grp:'D',home:'USA',          away:'Australia',    hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 19',grp:'D',home:'Türkiye',      away:'Paraguay',     hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 20',grp:'E',home:'Germany',      away:'Ivory Coast',  hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 20',grp:'E',home:'Ecuador',      away:'Curaçao',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 20',grp:'F',home:'Netherlands',  away:'Sweden',       hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 20',grp:'F',home:'Tunisia',      away:'Japan',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 21',grp:'H',home:'Spain',        away:'Saudi Arabia', hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 21',grp:'H',home:'Uruguay',      away:'Cape Verde',   hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 21',grp:'G',home:'Belgium',      away:'Iran',         hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 21',grp:'G',home:'New Zealand',  away:'Egypt',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 22',grp:'J',home:'Argentina',    away:'Austria',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 22',grp:'J',home:'Algeria',      away:'Jordan',       hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 22',grp:'I',home:'France',       away:'Iraq',         hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 22',grp:'I',home:'Norway',       away:'Senegal',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 23',grp:'K',home:'Portugal',     away:'Uzbekistan',   hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 23',grp:'K',home:'Colombia',     away:'DR Congo',     hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 23',grp:'L',home:'England',      away:'Ghana',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 23',grp:'L',home:'Croatia',      away:'Panama',       hg:null,ag:null,s:'upcoming'},
+  // ── ROUND 3 ──────────────────────────────────────────
+  {date:'Jun 24',grp:'A',home:'Mexico',       away:'Czechia',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 24',grp:'A',home:'South Korea',  away:'South Africa', hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 24',grp:'B',home:'Canada',       away:'Switzerland',  hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 24',grp:'B',home:'Bosnia',       away:'Qatar',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 25',grp:'C',home:'Brazil',       away:'Scotland',     hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 25',grp:'C',home:'Morocco',      away:'Haiti',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 25',grp:'D',home:'USA',          away:'Türkiye',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 25',grp:'D',home:'Australia',    away:'Paraguay',     hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'E',home:'Germany',      away:'Ecuador',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'E',home:'Ivory Coast',  away:'Curaçao',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'F',home:'Netherlands',  away:'Tunisia',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'F',home:'Sweden',       away:'Japan',        hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'I',home:'France',       away:'Norway',       hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'I',home:'Iraq',         away:'Senegal',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'J',home:'Argentina',    away:'Jordan',       hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 26',grp:'J',home:'Algeria',      away:'Austria',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'G',home:'Belgium',      away:'New Zealand',  hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'G',home:'Egypt',        away:'Iran',         hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'H',home:'Spain',        away:'Uruguay',      hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'H',home:'Saudi Arabia', away:'Cape Verde',   hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'K',home:'Portugal',     away:'Colombia',     hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'K',home:'DR Congo',     away:'Uzbekistan',   hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'L',home:'England',      away:'Panama',       hg:null,ag:null,s:'upcoming'},
+  {date:'Jun 27',grp:'L',home:'Croatia',      away:'Ghana',        hg:null,ag:null,s:'upcoming'},
+];
+
+/* ════════════════════════════════
+   LOGIC
+════════════════════════════════ */
+
+// Build reverse map: team → owner name
+const TEAM_OWNER = {};
+for (const [name, data] of Object.entries(OWNERS)) {
+  for (const t of data.teams) TEAM_OWNER[t] = name;
+}
+
+function getOwner(team) { return TEAM_OWNER[team] || null; }
+function ownerColor(team) {
+  const o = getOwner(team);
+  return o ? OWNERS[o].color : 'var(--dim)';
+}
+
+// Returns points earned by a team in a match (null if not played)
+function teamMatchPts(team, m) {
+  if (m.hg === null) return null;
+  const isHome = m.home === team;
+  const isAway = m.away === team;
+  if (!isHome && !isAway) return null;
+  if (m.hg > m.ag) return isHome ? 3 : 0;
+  if (m.hg < m.ag) return isAway ? 3 : 0;
+  return 1; // draw
+}
+
+// Compute points per owner, per team
+function computeStandings() {
+  const stats = {}; // name → { pts, wins, draws, losses, teamPts }
+  for (const [name, data] of Object.entries(OWNERS)) {
+    const teamPts = {};
+    for (const t of data.teams) teamPts[t] = null;
+    stats[name] = { pts: 0, wins: 0, draws: 0, losses: 0, teamPts };
+  }
+
+  for (const m of MATCHES) {
+    if (m.s !== 'done') continue;
+    for (const [name, data] of Object.entries(OWNERS)) {
+      for (const t of data.teams) {
+        const p = teamMatchPts(t, m);
+        if (p === null) continue;
+        stats[name].pts += p;
+        stats[name].teamPts[t] = (stats[name].teamPts[t] ?? 0) + p;
+        if (p === 3) stats[name].wins++;
+        else if (p === 1) stats[name].draws++;
+        else stats[name].losses++;
+      }
+    }
+  }
+  return stats;
+}
+
+/* ════════════════════════════════
+   RENDER HELPERS
+════════════════════════════════ */
+
+function flag(team) { return FLAGS[team] || '🏳️'; }
+
+function teamTag(team, side = 'home') {
+  const owner = getOwner(team);
+  const color = owner ? OWNERS[owner].color : 'var(--dim)';
+  const cls = side === 'away' ? 'match-team away' : 'match-team';
+  return `
+    <div class="${cls}">
+      <span class="flag">${flag(team)}</span>
+      <div>
+        <div class="tm-name">${team}</div>
+        ${owner ? `<span class="tm-owner" style="color:${color};background:${color}18">${owner}</span>` : ''}
+      </div>
+    </div>`;
+}
+
+function scoreBlock(m) {
+  if (m.s === 'done') {
+    return `<div class="match-center">
+      <div class="score">${m.hg} – ${m.ag}</div>
+      <div class="score-group">Group ${m.grp}</div>
+    </div>`;
+  }
+  if (m.s === 'today') {
+    return `<div class="match-center">
+      <div><span class="live-badge">TODAY</span></div>
+      <div class="score-group">Group ${m.grp} · ${m.date}</div>
+    </div>`;
+  }
+  return `<div class="match-center">
+    <div class="vs">vs</div>
+    <div class="score-group">Group ${m.grp} · ${m.date}</div>
+  </div>`;
+}
+
+function matchRow(m) {
+  const cls = m.s === 'today' ? 'match today-match' : 'match';
+  return `<div class="${cls}">
+    ${teamTag(m.home,'home')}
+    ${scoreBlock(m)}
+    ${teamTag(m.away,'away')}
+  </div>`;
+}
+
+/* ════════════════════════════════
+   RENDER SECTIONS
+════════════════════════════════ */
+
+function renderLeaderboard(stats) {
+  const sorted = Object.entries(stats).sort((a,b) => b[1].pts - a[1].pts);
+  const maxPts = sorted[0][1].pts || 1;
+  const rankIcons = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'];
+  const rankCls = ['r1','r2','r3','','',''];
+
+  let rows = sorted.map(([name, s], i) => {
+    const color = OWNERS[name].color;
+    const pct = Math.round(s.pts / maxPts * 100);
+    return `<div class="lb-row">
+      <div class="lb-rank ${rankCls[i]}">${rankIcons[i]}</div>
+      <div class="lb-info">
+        <div class="lb-name" style="color:${color}">${name}</div>
+        <div class="lb-wdl">${s.wins}W · ${s.draws}D · ${s.losses}L</div>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%;background:${color}"></div></div>
+      </div>
+      <div>
+        <div class="lb-pts">${s.pts}</div>
+        <div class="lb-pts-label">pts</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="card">
+    <div class="card-head">🏆 Leaderboard · Round 1 (excl. today)</div>
+    ${rows}
+  </div>`;
+}
+
+function renderToday() {
+  const todayMatches = MATCHES.filter(m => m.s === 'today');
+  if (!todayMatches.length) return '';
+  return `<div class="card">
+    <div class="card-head">⚡ Today — June 17</div>
+    ${todayMatches.map(matchRow).join('')}
+  </div>`;
+}
+
+function renderUpcoming() {
+  const upcoming = MATCHES.filter(m => m.s === 'upcoming');
+  // Group by date
+  const byDate = {};
+  for (const m of upcoming) {
+    if (!byDate[m.date]) byDate[m.date] = [];
+    byDate[m.date].push(m);
+  }
+
+  let html = `<div class="card">
+    <div class="card-head">📅 Upcoming Fixtures</div>`;
+
+  for (const [date, matches] of Object.entries(byDate)) {
+    html += `<div class="day-label">${date}</div>`;
+    html += matches.map(matchRow).join('');
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderResults() {
+  const done = MATCHES.filter(m => m.s === 'done').slice().reverse();
+  const byDate = {};
+  for (const m of done) {
+    if (!byDate[m.date]) byDate[m.date] = [];
+    byDate[m.date].push(m);
+  }
+
+  let html = `<div class="card">
+    <div class="card-head">✅ Results · Round 1</div>`;
+
+  for (const [date, matches] of Object.entries(byDate)) {
+    html += `<div class="day-label">${date}</div>`;
+    html += matches.map(matchRow).join('');
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderPlayers(stats) {
+  const sorted = Object.keys(OWNERS).sort((a,b) => stats[b].pts - stats[a].pts);
+
+  // For each team, find its match result status
+  function teamStatus(team, teamPts) {
+    if (teamPts === null) return 'tbd';
+    if (teamPts === 3) return 'win';
+    if (teamPts === 1) return 'draw';
+    return 'loss';
+  }
+
+  function teamPtsLabel(teamPts) {
+    if (teamPts === null) return '–';
+    return `+${teamPts}`;
+  }
+
+  let cards = sorted.map(name => {
+    const data = OWNERS[name];
+    const s = stats[name];
+    const color = data.color;
+
+    const teamRows = data.teams.map(t => {
+      const tp = s.teamPts[t];
+      const st = teamStatus(t, tp);
+      return `<div class="team-row">
+        <div class="team-left">
+          <div class="status-dot ${st}"></div>
+          <span>${flag(t)}</span>
+          <span>${t}</span>
+        </div>
+        <span class="pts-badge ${st}">${teamPtsLabel(tp)}</span>
+      </div>`;
+    }).join('');
+
+    return `<div class="card player-card">
+      <div class="card-head" style="color:${color};background:${color}18;border-bottom:1px solid ${color}30">
+        ${name}
+        <span style="margin-left:auto;font-size:1rem;color:${color}">${s.pts} pts</span>
+      </div>
+      ${teamRows}
+    </div>`;
+  }).join('');
+
+  return `<div>
+    <div class="section-title">&#x1F4CB; Player Breakdown</div>
+    <div class="two-col">${cards}</div>
+  </div>`;
+}
+
+/* ════════════════════════════════
+   INIT
+════════════════════════════════ */
+const stats = computeStandings();
+
+document.getElementById('leaderboard-wrap').innerHTML = renderLeaderboard(stats);
+document.getElementById('today-wrap').innerHTML       = renderToday();
+document.getElementById('upcoming-wrap').innerHTML    = renderUpcoming();
+document.getElementById('results-wrap').innerHTML     = renderResults();
+document.getElementById('players-wrap').innerHTML     = renderPlayers(stats);
+</script>
+</body>
+</html>
