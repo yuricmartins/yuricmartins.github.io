@@ -291,6 +291,8 @@
     .grp-table tr.can-advance td:first-child { font-weight: 700; }
     .grp-table tr.can-advance td.pts-col { color: var(--gold-hi); }
 
+    @media (max-width: 640px) { .grp-sec { display: none; } }
+
     .team-cell { display: flex; align-items: center; gap: 5px; }
     .owner-dot {
       width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
@@ -765,11 +767,11 @@ function renderGroups(groupStandings) {
             <span>${r.name}</span>
           </div>
         </td>
-        <td>${r.p}</td>
-        <td>${r.w}</td>
-        <td>${r.d}</td>
-        <td>${r.l}</td>
-        <td>${r.gd > 0 ? '+'+r.gd : r.gd}</td>
+        <td class="grp-sec">${r.p}</td>
+        <td class="grp-sec">${r.w}</td>
+        <td class="grp-sec">${r.d}</td>
+        <td class="grp-sec">${r.l}</td>
+        <td class="grp-sec">${r.gd > 0 ? '+'+r.gd : r.gd}</td>
         <td class="pts-col">${r.pts}</td>
       </tr>
       ${i === 1 ? `<tr><td colspan="7" class="advance-bar" style="padding:0"></td></tr>` : ''}`;
@@ -782,8 +784,8 @@ function renderGroups(groupStandings) {
         <thead>
           <tr>
             <th>Team</th>
-            <th>P</th><th>W</th><th>D</th><th>L</th>
-            <th>GD</th><th>Pts</th>
+            <th class="grp-sec">P</th><th class="grp-sec">W</th><th class="grp-sec">D</th><th class="grp-sec">L</th>
+            <th class="grp-sec">GD</th><th>Pts</th>
           </tr>
         </thead>
         <tbody>${tableRows}</tbody>
