@@ -2,7 +2,7 @@ name: Update World Cup Scores
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # 07:00 UTC daily (covers overnight European/American games)
+    - cron: '0 */4 * * *'  # every 4 hours
   workflow_dispatch:        # also triggerable manually from the Actions tab
 
 jobs:
