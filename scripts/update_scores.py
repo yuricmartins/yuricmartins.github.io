@@ -102,9 +102,11 @@ def build_matches_js(raw_matches: list) -> str:
         else:
             hgs, ags = 'null', 'null'
 
+        utc_time = m['utcDate'][11:16]  # "HH:MM" from "2026-06-17T18:00:00Z"
+
         lines.append(
             f"  {{date:'{date}',grp:'{grp}',home:'{home}',away:'{away}',"
-            f"hg:{hgs},ag:{ags},s:'{s}'}},"
+            f"hg:{hgs},ag:{ags},s:'{s}',t:'{utc_time}'}},"
         )
 
     if unknown_teams:

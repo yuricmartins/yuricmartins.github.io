@@ -797,6 +797,15 @@ function renderGroups(groupStandings) {
 }
 
 /* ─── RENDER: SCHEDULE ────────────────────────────────────────── */
+
+// WC runs entirely in CEST (UTC+2) — Barcelona is always UTC+2 during the tournament
+function fmtTime(utcTime) {
+  if (!utcTime) return '';
+  const [h, min] = utcTime.split(':').map(Number);
+  const bh = (h + 2) % 24;
+  return `${String(bh).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+}
+
 function matchRow(m) {
   const hOwner = owner(m.home), aOwner = owner(m.away);
   const hColor = hOwner ? OWNERS[hOwner].color : 'var(--dim)';
@@ -816,14 +825,16 @@ function matchRow(m) {
       <div class="grp-badge">Grp ${m.grp}</div>
     </div>`;
   } else if (m.s === 'today') {
+    const t = fmtTime(m.t);
     mid = `<div class="match-mid">
       <div><span class="today-pill">TODAY</span></div>
-      <div class="grp-badge">Grp ${m.grp} · ${m.date}</div>
+      <div class="grp-badge">Grp ${m.grp}${t ? ` · ${t}` : ''}</div>
     </div>`;
   } else {
+    const t = fmtTime(m.t);
     mid = `<div class="match-mid">
       <div class="vs">vs</div>
-      <div class="grp-badge">Grp ${m.grp} · ${m.date}</div>
+      <div class="grp-badge">Grp ${m.grp} · ${m.date}${t ? ` · ${t}` : ''}</div>
     </div>`;
   }
 
