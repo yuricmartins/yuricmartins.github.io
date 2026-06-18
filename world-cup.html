@@ -859,13 +859,28 @@ function byDate(arr) {
 function renderSchedule() {
   const today    = MATCHES.filter(m => m.s === 'today');
   const upcoming = MATCHES.filter(m => m.s === 'upcoming');
-  const done     = MATCHES.filter(m => m.s === 'done').slice().reverse();
+  const done     = MATCHES.filter(m => m.s === 'done'); // chronological — newest ends up closest to anchor
 
   let html = '';
 
+  // Results sit ABOVE the anchor so users can scroll up to see them
+  if (done.length) {
+    const grouped = byDate(done);
+    let inner = '';
+    for (const [date, matches] of Object.entries(grouped)) {
+      inner += `<div class="day-label">${date}</div>`;
+      inner += matches.map(matchRow).join('');
+    }
+    html += `<div class="card sched-section">
+      <div class="card-head">✅ Results</div>${inner}</div>`;
+  }
+
+  // Anchor: tab switch scrolls here so upcoming is the first thing visible
+  html += `<div id="upcoming-anchor"></div>`;
+
   if (today.length) {
     html += `<div class="card sched-section">
-      <div class="card-head"><span class="today-pill">TODAY</span> &nbsp;Jun 17</div>
+      <div class="card-head"><span class="today-pill">TODAY</span> &nbsp;${today[0].date}</div>
       ${today.map(matchRow).join('')}
     </div>`;
   }
@@ -879,17 +894,6 @@ function renderSchedule() {
     }
     html += `<div class="card sched-section">
       <div class="card-head">📅 Upcoming</div>${inner}</div>`;
-  }
-
-  if (done.length) {
-    const grouped = byDate(done);
-    let inner = '';
-    for (const [date, matches] of Object.entries(grouped)) {
-      inner += `<div class="day-label">${date}</div>`;
-      inner += matches.map(matchRow).join('');
-    }
-    html += `<div class="card sched-section">
-      <div class="card-head">✅ Results</div>${inner}</div>`;
   }
 
   document.getElementById('schedule-content').innerHTML = html;
@@ -952,6 +956,16 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+
+    if (btn.dataset.panel === 'schedule') {
+      requestAnimationFrame(() => {
+        const anchor = document.getElementById('upcoming-anchor');
+        if (anchor) {
+          const tabsH = document.querySelector('.tabs').offsetHeight;
+          window.scrollTo({ top: anchor.getBoundingClientRect().top + window.scrollY - tabsH, behavior: 'instant' });
+        }
+      });
+    }
   });
 });
 
