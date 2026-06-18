@@ -265,22 +265,7 @@
       letter-spacing: .06em;
     }
 
-    .scoring-strip {
-      display: flex;
-      border-top: 1px solid var(--border);
-    }
-    .scoring-item {
-      flex: 1;
-      text-align: center;
-      padding: 12px 8px;
-      border-right: 1px solid var(--border);
-      font-size: .7rem;
-      color: var(--dim);
-    }
-    .scoring-item:last-child { border-right: none; }
-    .scoring-item strong { display: block; font-size: .95rem; font-weight: 700; margin-bottom: 2px; }
-    .scoring-item strong.win   { color: var(--win); }
-    .scoring-item strong.draw  { color: var(--draw); }
+
 
     /* ─── GROUPS ─────────────────────────────────────────────────── */
     .groups-grid {
@@ -764,18 +749,8 @@ function renderLeaderboard(stats) {
     '</div>';
   }).join('');
 
-  const total = sorted.reduce((acc,[,s]) => acc + s.pts, 0);
-
-  const strip =
-    '<div class="scoring-strip">' +
-      '<div class="scoring-item"><strong class="win">3</strong>Win</div>' +
-      '<div class="scoring-item"><strong class="draw">1</strong>Draw</div>' +
-      '<div class="scoring-item"><strong style="color:var(--muted)">0</strong>Loss</div>' +
-      '<div class="scoring-item"><strong style="color:var(--text)">' + total + '</strong>Total pts</div>' +
-    '</div>';
-
   document.getElementById('lb-card').innerHTML =
-    '<div class="card-head"><span>🏆</span> Leaderboard</div>' + rows + strip;
+    '<div class="card-head"><span>🏆</span> Leaderboard</div>' + rows;
 }
 
 /* ─── RENDER: TODAY ───────────────────────────────────────────── */
