@@ -760,7 +760,7 @@ function renderToday() {
 
   const rows = today.map(matchRow).join('');
   document.getElementById('today-card').innerHTML =
-    '<div class="card-head"><span class="today-pill">TODAY</span>&nbsp;&nbsp;' + today[0].date + '</div>' + rows;
+    '<div class="card-head"><span class="today-pill">TODAY</span>&nbsp;&nbsp;' + barcelonaDateTime(today[0].date, today[0].t).date + '</div>' + rows;
 }
 
 /* ─── RENDER: GROUPS ──────────────────────────────────────────── */
@@ -811,12 +811,22 @@ function renderGroups(groupStandings) {
 
 /* ─── RENDER: SCHEDULE ────────────────────────────────────────── */
 
-// WC runs entirely in CEST (UTC+2) — Barcelona is always UTC+2 during the tournament
-function fmtTime(utcTime) {
-  if (!utcTime) return '';
+// WC runs entirely in CEST (UTC+2) — Barcelona is always UTC+2 during the tournament.
+// When UTC hour + 2 >= 24, the Barcelona date is the next calendar day.
+function barcelonaDateTime(utcDate, utcTime) {
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS_IN = [31,28,31,30,31,30,31,31,30,31,30,31];
+  if (!utcTime) return { date: utcDate, time: '' };
   const [h, min] = utcTime.split(':').map(Number);
-  const bh = (h + 2) % 24;
-  return String(bh).padStart(2, '0') + ':' + String(min).padStart(2, '0');
+  const bh = h + 2;
+  const time = String(bh % 24).padStart(2, '0') + ':' + String(min).padStart(2, '0');
+  if (bh < 24) return { date: utcDate, time };
+  const parts = utcDate.split(' ');
+  const mIdx = MONTHS.indexOf(parts[0]);
+  let d = parseInt(parts[1]) + 1;
+  let mo = mIdx;
+  if (d > DAYS_IN[mo]) { d = 1; mo = (mo + 1) % 12; }
+  return { date: MONTHS[mo] + ' ' + d, time };
 }
 
 function matchRow(m) {
@@ -835,11 +845,11 @@ function matchRow(m) {
   if (m.s === 'done') {
     mid = '<div class="match-mid"><div class="score">' + m.hg + ' – ' + m.ag + '</div><div class="grp-badge">Grp ' + m.grp + '</div></div>';
   } else if (m.s === 'today') {
-    const t = fmtTime(m.t);
+    const { time: t } = barcelonaDateTime(m.date, m.t);
     mid = '<div class="match-mid"><div><span class="today-pill">TODAY</span></div><div class="grp-badge">Grp ' + m.grp + (t ? ' \xb7 ' + t : '') + '</div></div>';
   } else {
-    const t = fmtTime(m.t);
-    mid = '<div class="match-mid"><div class="vs">vs</div><div class="grp-badge">Grp ' + m.grp + ' \xb7 ' + m.date + (t ? ' \xb7 ' + t : '') + '</div></div>';
+    const { date: bDate, time: t } = barcelonaDateTime(m.date, m.t);
+    mid = '<div class="match-mid"><div class="vs">vs</div><div class="grp-badge">Grp ' + m.grp + ' \xb7 ' + bDate + (t ? ' \xb7 ' + t : '') + '</div></div>';
   }
 
   return (
@@ -860,8 +870,9 @@ function matchRow(m) {
 function byDate(arr) {
   const map = {};
   for (const m of arr) {
-    if (!map[m.date]) map[m.date] = [];
-    map[m.date].push(m);
+    const key = barcelonaDateTime(m.date, m.t).date;
+    if (!map[key]) map[key] = [];
+    map[key].push(m);
   }
   return map;
 }
@@ -886,7 +897,7 @@ function renderSchedule() {
   html += '<div id="upcoming-anchor"></div>';
 
   if (today.length) {
-    html += '<div class="card sched-section"><div class="card-head"><span class="today-pill">TODAY</span>&nbsp;&nbsp;' + today[0].date + '</div>' + today.map(matchRow).join('') + '</div>';
+    html += '<div class="card sched-section"><div class="card-head"><span class="today-pill">TODAY</span>&nbsp;&nbsp;' + barcelonaDateTime(today[0].date, today[0].t).date + '</div>' + today.map(matchRow).join('') + '</div>';
   }
 
   if (upcoming.length) {
