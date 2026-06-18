@@ -21,6 +21,7 @@ TEAM_MAP = {
     "Turkey":                  "Türkiye",
     "Türkiye":                 "Türkiye",
     "Bosnia and Herzegovina":  "Bosnia",
+    "Bosnia-Herzegovina":      "Bosnia",
     "Korea Republic":          "South Korea",
     "Republic of Korea":       "South Korea",
     "United States":           "USA",
@@ -33,6 +34,7 @@ TEAM_MAP = {
     "Saudi Arabia":            "Saudi Arabia",
     "New Zealand":             "New Zealand",
     "Cape Verde":              "Cape Verde",
+    "Cape Verde Islands":      "Cape Verde",
 }
 
 
