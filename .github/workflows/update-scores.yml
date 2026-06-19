@@ -2,7 +2,21 @@ name: Update World Cup Scores
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # every 2 hours
+    # Each entry fires 2h15m after a unique kickoff time (UTC), covering all match slots.
+    - cron: '15 2 * * *'   # 00:00 kickoffs → update 02:15
+    - cron: '45 2 * * *'   # 00:30 kickoffs → update 02:45
+    - cron: '15 3 * * *'   # 01:00 kickoffs → update 03:15
+    - cron: '15 4 * * *'   # 02:00 kickoffs → update 04:15
+    - cron: '15 5 * * *'   # 03:00 kickoffs → update 05:15
+    - cron: '15 6 * * *'   # 04:00 kickoffs → update 06:15
+    - cron: '15 18 * * *'  # 16:00 kickoffs → update 18:15
+    - cron: '15 19 * * *'  # 17:00 kickoffs → update 19:15
+    - cron: '15 21 * * *'  # 19:00 kickoffs → update 21:15
+    - cron: '15 22 * * *'  # 20:00 kickoffs → update 22:15
+    - cron: '15 23 * * *'  # 21:00 kickoffs → update 23:15
+    - cron: '15 0 * * *'   # 22:00 kickoffs → update 00:15
+    - cron: '15 1 * * *'   # 23:00 kickoffs → update 01:15
+    - cron: '45 1 * * *'   # 23:30 kickoffs → update 01:45
   workflow_dispatch:        # also triggerable manually from the Actions tab
 
 jobs:
