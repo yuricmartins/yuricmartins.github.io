@@ -72,7 +72,16 @@ def extract_group(group_str: str) -> str:
     return m.group(1) if m else '?'
 
 
-def build_matches_js(raw_matches: list) -> str:
+def parse_existing_scores(content: str) -> dict:
+    """Return {(home, away): (hg, ag)} for done matches that already have numeric scores."""
+    pattern = r"home:'([^']+)',away:'([^']+)',hg:(\d+),ag:(\d+),s:'done'"
+    return {
+        (m.group(1), m.group(2)): (int(m.group(3)), int(m.group(4)))
+        for m in re.finditer(pattern, content)
+    }
+
+
+def build_matches_js(raw_matches: list, existing_scores: dict) -> str:
     lines = []
     unknown_teams = set()
 
@@ -97,6 +106,12 @@ def build_matches_js(raw_matches: list) -> str:
         if m['status'] == 'FINISHED':
             hg = m['score']['fullTime']['home']
             ag = m['score']['fullTime']['away']
+            if hg is None or ag is None:
+                # API returned null for a finished match — preserve existing score
+                fallback = existing_scores.get((home, away))
+                if fallback:
+                    hg, ag = fallback
+                    print(f'INFO: using cached score for {home} vs {away}: {hg}–{ag}')
             hgs = str(hg) if hg is not None else 'null'
             ags = str(ag) if ag is not None else 'null'
         else:
@@ -144,12 +159,18 @@ if __name__ == '__main__':
         print('ERROR: FOOTBALL_DATA_API_KEY environment variable not set.', file=sys.stderr)
         sys.exit(1)
 
+    html_path = os.path.join(os.path.dirname(__file__), '..', 'world-cup.html')
+
+    with open(html_path, 'r', encoding='utf-8') as f:
+        existing_content = f.read()
+    existing_scores = parse_existing_scores(existing_content)
+
     print('Fetching matches from football-data.org …')
     data    = fetch_json(f'{BASE_URL}/competitions/{WC_CODE}/matches')
     matches = data.get('matches', [])
     print(f'Received {len(matches)} matches total.')
 
-    new_js   = build_matches_js(matches)
+    new_js   = build_matches_js(matches, existing_scores)
     html_path = os.path.join(os.path.dirname(__file__), '..', 'world-cup.html')
 
     update_html(html_path, new_js)
