@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch FIFA World Cup 2026 group-stage results and update world-cup.html."""
+"""Fetch FIFA World Cup 2026 results (all stages) and update world-cup.html."""
 
 import json
 import os
@@ -37,6 +37,17 @@ TEAM_MAP = {
     "Cape Verde Islands":      "Cape Verde",
 }
 
+# Map API stage → JS grp label (None = use group letter from extract_group())
+STAGE_TO_GRP = {
+    'GROUP_STAGE':          None,
+    'LAST_32':              'R32',
+    'LAST_16':              'R16',
+    'QUARTER_FINALS':       'QF',
+    'SEMI_FINALS':          'SF',
+    'THIRD_PLACE_PLAY_OFF': '3rd',
+    'FINAL':                'Final',
+}
+
 
 def normalize(name: str) -> str:
     return TEAM_MAP.get(name, name)
@@ -51,7 +62,6 @@ def fetch_json(url: str) -> dict:
 def fmt_date(iso: str) -> str:
     """'2026-06-17T...' → 'Jun 17'"""
     dt = datetime.strptime(iso[:10], '%Y-%m-%d')
-    # %-d strips leading zero on Linux (GitHub Actions = Ubuntu)
     return dt.strftime('%b %-d')
 
 
@@ -86,8 +96,9 @@ def build_matches_js(raw_matches: list, existing_scores: dict) -> str:
     unknown_teams = set()
 
     for m in raw_matches:
-        if m.get('stage') != 'GROUP_STAGE':
-            continue
+        stage = m.get('stage', '')
+        if stage not in STAGE_TO_GRP:
+            continue  # skip unknown stages
 
         raw_home = m['homeTeam']['name']
         raw_away = m['awayTeam']['name']
@@ -99,30 +110,62 @@ def build_matches_js(raw_matches: list, existing_scores: dict) -> str:
         if raw_away not in TEAM_MAP and raw_away != away:
             unknown_teams.add(raw_away)
 
-        date = fmt_date(m['utcDate'])
-        grp  = extract_group(m.get('group', ''))
-        s    = match_status(m['status'], m['utcDate'])
+        date     = fmt_date(m['utcDate'])
+        grp_key  = STAGE_TO_GRP[stage]
+        grp      = grp_key if grp_key else extract_group(m.get('group', ''))
+        s        = match_status(m['status'], m['utcDate'])
+        utc_time = m['utcDate'][11:16]
+
+        aet = False
+        pen = None
 
         if m['status'] == 'FINISHED':
-            hg = m['score']['fullTime']['home']
-            ag = m['score']['fullTime']['away']
+            score    = m.get('score', {})
+            ft       = score.get('fullTime', {})
+            et       = score.get('extraTime', {})
+            pens     = score.get('penalties', {})
+            winner   = m.get('winner')  # 'HOME_TEAM', 'AWAY_TEAM', 'DRAW'
+
+            ft_h = ft.get('home')
+            ft_a = ft.get('away')
+            et_h = et.get('home') if et else None
+            et_a = et.get('away') if et else None
+            p_h  = pens.get('home') if pens else None
+            p_a  = pens.get('away') if pens else None
+
+            # Use ET score if played, else FT score
+            if et_h is not None and et_a is not None:
+                hg, ag = et_h, et_a
+                aet = True
+            else:
+                hg, ag = ft_h, ft_a
+
+            # Penalty shootout: mark winner, keep ET/FT score as-is
+            if p_h is not None and p_a is not None:
+                pen = 'home' if winner == 'HOME_TEAM' else ('away' if winner == 'AWAY_TEAM' else None)
+
+            # Fallback to cached score if API returns null for a finished match
             if hg is None or ag is None:
-                # API returned null for a finished match — preserve existing score
                 fallback = existing_scores.get((home, away))
                 if fallback:
                     hg, ag = fallback
                     print(f'INFO: using cached score for {home} vs {away}: {hg}–{ag}')
+
             hgs = str(hg) if hg is not None else 'null'
             ags = str(ag) if ag is not None else 'null'
         else:
-            hgs, ags = 'null', 'null'
+            hgs = ags = 'null'
 
-        utc_time = m['utcDate'][11:16]  # "HH:MM" from "2026-06-17T18:00:00Z"
-
-        lines.append(
+        entry = (
             f"  {{date:'{date}',grp:'{grp}',home:'{home}',away:'{away}',"
-            f"hg:{hgs},ag:{ags},s:'{s}',t:'{utc_time}'}},"
+            f"hg:{hgs},ag:{ags},s:'{s}',t:'{utc_time}'"
         )
+        if aet:
+            entry += ',aet:true'
+        if pen:
+            entry += f",pen:'{pen}'"
+        entry += '},'
+        lines.append(entry)
 
     if unknown_teams:
         print(f'WARNING: unmapped teams (check TEAM_MAP): {unknown_teams}', file=sys.stderr)
@@ -170,7 +213,5 @@ if __name__ == '__main__':
     matches = data.get('matches', [])
     print(f'Received {len(matches)} matches total.')
 
-    new_js   = build_matches_js(matches, existing_scores)
-    html_path = os.path.join(os.path.dirname(__file__), '..', 'world-cup.html')
-
+    new_js = build_matches_js(matches, existing_scores)
     update_html(html_path, new_js)

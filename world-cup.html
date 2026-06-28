@@ -380,6 +380,14 @@
       letter-spacing: 1px;
       line-height: 1;
     }
+    .score-extra {
+      display: block;
+      font-size: .58rem;
+      font-weight: 500;
+      color: var(--dim);
+      letter-spacing: .04em;
+      margin-top: 1px;
+    }
     .grp-badge { font-size: .6rem; color: var(--muted); margin-top: 3px; }
     .vs { font-size: .9rem; color: var(--muted); }
     .today-pill {
@@ -396,6 +404,24 @@
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
 
     .sched-section { margin-bottom: 16px; }
+
+    .stage-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px 6px;
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--primary);
+    }
+    .stage-divider::before, .stage-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
 
     /* ─── PLAYERS ────────────────────────────────────────────────── */
     .players-grid {
@@ -539,7 +565,7 @@
 </div>
 
 <footer>
-  Scoring: Win = 3 pts · Draw = 1 pt · Loss = 0 pts (group stage)
+  Scoring — Group stage: Win = 3 pts · Draw = 1 pt · Loss = 0 pts · Knockout: Win = 3 pts · Loss = 0 pts
 </footer>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -659,6 +685,13 @@ const flag  = t => FLAGS[t] || '🏳️';
 const owner = t => TEAM_OWNER[t] || null;
 const ownerColor = t => { const o = owner(t); return o ? OWNERS[o].color : 'var(--dim)'; };
 
+/* ─── STAGE HELPERS ───────────────────────────────────────────── */
+const GRP_LETTERS  = new Set('ABCDEFGHIJKL'.split(''));
+const STAGE_LABEL  = { R32:'Round of 32', R16:'Round of 16', QF:'Quarter-finals', SF:'Semi-finals', '3rd':'3rd Place', Final:'Final' };
+const STAGE_ORDER  = { 'Group Stage':0, R32:1, R16:2, QF:3, SF:4, '3rd':5, Final:6 };
+const stageOf = m => GRP_LETTERS.has(m.grp) ? 'Group Stage' : m.grp;
+const badgeOf = m => GRP_LETTERS.has(m.grp) ? 'Grp ' + m.grp : (STAGE_LABEL[m.grp] || m.grp);
+
 /* ─── SCORING ─────────────────────────────────────────────────── */
 function teamMatchPts(team, m) {
   if (m.hg === null) return null;
@@ -666,6 +699,9 @@ function teamMatchPts(team, m) {
   if (!h && !a) return null;
   if (m.hg > m.ag) return h ? 3 : 0;
   if (m.hg < m.ag) return a ? 3 : 0;
+  // Level after full time — penalty winner (knockout) or genuine draw (group)
+  if (m.pen === 'home') return h ? 3 : 0;
+  if (m.pen === 'away') return a ? 3 : 0;
   return 1;
 }
 
@@ -766,6 +802,12 @@ function renderToday() {
 /* ─── RENDER: GROUPS ──────────────────────────────────────────── */
 function renderGroups(groupStandings) {
   const grpOrder = 'ABCDEFGHIJKL'.split('');
+  // Group stage is final when every team in every group played 3 games
+  const groupStageDone = grpOrder.every(grp => {
+    const rows = groupStandings[grp];
+    return rows && rows.every(r => r.p === 3);
+  });
+
   const html = grpOrder.map(grp => {
     const rows = groupStandings[grp];
     if (!rows) return '';
@@ -793,7 +835,7 @@ function renderGroups(groupStandings) {
 
     return (
       '<div class="grp-card">' +
-        '<div class="grp-head">Group ' + grp + '</div>' +
+        '<div class="grp-head">Group ' + grp + (groupStageDone ? ' · Final' : '') + '</div>' +
         '<table class="grp-table">' +
           '<thead><tr>' +
             '<th>Team</th>' +
@@ -841,15 +883,17 @@ function matchRow(m) {
     ? '<span class="owner-tag" style="color:' + aColor + ';background:' + aColor + '18">' + aOwner + '</span>'
     : '';
 
+  const badge = badgeOf(m);
   let mid;
   if (m.s === 'done') {
-    mid = '<div class="match-mid"><div class="score">' + m.hg + ' – ' + m.ag + '</div><div class="grp-badge">Grp ' + m.grp + '</div></div>';
+    const extra = m.pen ? 'pen' : (m.aet ? 'aet' : '');
+    mid = '<div class="match-mid"><div class="score">' + m.hg + ' – ' + m.ag + (extra ? '<span class="score-extra">(' + extra + ')</span>' : '') + '</div><div class="grp-badge">' + badge + '</div></div>';
   } else if (m.s === 'today') {
     const { time: t } = barcelonaDateTime(m.date, m.t);
-    mid = '<div class="match-mid"><div><span class="today-pill">TODAY</span></div><div class="grp-badge">Grp ' + m.grp + (t ? ' \xb7 ' + t : '') + '</div></div>';
+    mid = '<div class="match-mid"><div><span class="today-pill">TODAY</span></div><div class="grp-badge">' + badge + (t ? ' \xb7 ' + t : '') + '</div></div>';
   } else {
     const { date: bDate, time: t } = barcelonaDateTime(m.date, m.t);
-    mid = '<div class="match-mid"><div class="vs">vs</div><div class="grp-badge">Grp ' + m.grp + ' \xb7 ' + bDate + (t ? ' \xb7 ' + t : '') + '</div></div>';
+    mid = '<div class="match-mid"><div class="vs">vs</div><div class="grp-badge">' + badge + ' \xb7 ' + bDate + (t ? ' \xb7 ' + t : '') + '</div></div>';
   }
 
   return (
@@ -877,6 +921,33 @@ function byDate(arr) {
   return map;
 }
 
+function stageBlocks(matches) {
+  // Group matches by stage (preserving stage order), then by date within each stage
+  const byStage = {};
+  for (const m of matches) {
+    const s = stageOf(m);
+    if (!byStage[s]) byStage[s] = [];
+    byStage[s].push(m);
+  }
+  const stages = Object.keys(byStage).sort((a, b) => (STAGE_ORDER[a] ?? 99) - (STAGE_ORDER[b] ?? 99));
+  let inner = '';
+  let firstStage = true;
+  for (const stage of stages) {
+    if (stage !== 'Group Stage') {
+      inner += '<div class="stage-divider">' + (STAGE_LABEL[stage] || stage) + '</div>';
+    } else if (!firstStage) {
+      inner += '<div class="stage-divider">Group Stage</div>';
+    }
+    firstStage = false;
+    const grouped = byDate(byStage[stage]);
+    for (const [date, ms] of Object.entries(grouped)) {
+      inner += '<div class="day-label">' + date + '</div>';
+      inner += ms.map(matchRow).join('');
+    }
+  }
+  return inner;
+}
+
 function renderSchedule() {
   const today    = MATCHES.filter(m => m.s === 'today');
   const upcoming = MATCHES.filter(m => m.s === 'upcoming');
@@ -885,13 +956,7 @@ function renderSchedule() {
   let html = '';
 
   if (done.length) {
-    const grouped = byDate(done);
-    let inner = '';
-    for (const [date, matches] of Object.entries(grouped)) {
-      inner += '<div class="day-label">' + date + '</div>';
-      inner += matches.map(matchRow).join('');
-    }
-    html += '<div class="card sched-section"><div class="card-head">✅ Results</div>' + inner + '</div>';
+    html += '<div class="card sched-section"><div class="card-head">✅ Results</div>' + stageBlocks(done) + '</div>';
   }
 
   html += '<div id="upcoming-anchor"></div>';
@@ -901,13 +966,7 @@ function renderSchedule() {
   }
 
   if (upcoming.length) {
-    const grouped = byDate(upcoming);
-    let inner = '';
-    for (const [date, matches] of Object.entries(grouped)) {
-      inner += '<div class="day-label">' + date + '</div>';
-      inner += matches.map(matchRow).join('');
-    }
-    html += '<div class="card sched-section"><div class="card-head">📅 Upcoming</div>' + inner + '</div>';
+    html += '<div class="card sched-section"><div class="card-head">📅 Upcoming</div>' + stageBlocks(upcoming) + '</div>';
   }
 
   document.getElementById('schedule-content').innerHTML = html;
@@ -985,10 +1044,31 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
+/* ─── HEADER META ─────────────────────────────────────────────── */
+function updateHeaderMeta() {
+  const PHASE_META = {
+    Final:  'Final · July 19, 2026',
+    SF:     'Semi-finals · July 2026',
+    '3rd':  '3rd Place · July 2026',
+    QF:     'Quarter-finals · July 2026',
+    R16:    'Round of 16 · July 2026',
+    R32:    'Round of 32 · July 2026',
+  };
+  const knockoutOrder = ['Final','SF','3rd','QF','R16','R32'];
+  // Find the earliest active (non-done) knockout stage
+  let phase = null;
+  for (const s of knockoutOrder) {
+    if (MATCHES.some(m => m.grp === s)) { phase = s; break; }
+  }
+  const el = document.getElementById('header-meta');
+  if (el) el.textContent = phase ? PHASE_META[phase] : 'Group Stage · June 11 – 28, 2026';
+}
+
 /* ─── INIT ────────────────────────────────────────────────────── */
 const ownerStats     = computeOwnerStats();
 const groupStandings = computeGroupStandings();
 
+updateHeaderMeta();
 renderLeaderboard(ownerStats);
 renderToday();
 renderGroups(groupStandings);
