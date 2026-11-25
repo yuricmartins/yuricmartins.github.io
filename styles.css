@@ -1,13 +1,27 @@
-html { 
+:root {
+  --background: #F3F2F0;
+  --text: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0F0F0F;
+    --text: #FFFFFF;
+  }
+}
+
+html {
   overflow-y: scroll;
 }
 
 body {
-  background-color: #0F0F0F;
+  background-color: var(--background);
   font-family: 'Inter', sans-serif;
   font-size: 0.875rem;
   line-height: 1.125rem;
-  color: rgba(240,240,240,1);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
   position: absolute;
   width: 100%;
@@ -23,8 +37,8 @@ body {
   padding-bottom: 48px;
 }
 
-.intro{
-  padding-bottom: 48px;
+.intro {
+  padding-bottom: 36px;
   animation: intro-fade-in 1s ease 0s 1 forwards;
 }
 
@@ -39,41 +53,27 @@ body {
   }
 }
 
-.links {
-  display: flex;
-  gap: 24px;
-  animation: links-fade-in 1s ease 0s 1 forwards;
+h1 {
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
-@keyframes links-fade-in {
-  0% {
-      opacity: 0;
-      transform: translateY(16px);
-  }
-  100% {
-      opacity: 1;
-      transform: translateY(0px);
-  }
-}
-
-.link {
-  display: flex;
-  align-items: center;
-  gap: 2px;
+p + p {
+  margin-top: 18px;
 }
 
 a {
-  text-decoration: none;
-  color: rgba(240,240,240,1);
-  transition: 0.2s ease-in;
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  /* Text color at 20% when idle, full text color on hover */
+  text-decoration-color: color-mix(in srgb, currentColor 20%, transparent);
+  transition: text-decoration-color 300ms ease-out;
 }
 
 a:hover {
-  color: rgba(240,240,240,0.7);
-}
-
-.icon {
-  fill: rgba(255,255,255,0.5);
+  text-decoration-color: currentColor;
 }
 
 em {
@@ -89,30 +89,5 @@ em {
     margin-left: 24px;
     margin-right: 24px;
     padding-bottom: 0px;
-  }
-
-  .links {
-    flex-direction: column;
-    gap: 32px;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    background-color: #FDFDFD;
-    color: rgba(0,0,0,1);
-  }
-
-  a {
-    text-decoration: none;
-    color: rgba(0,0,0,1);
-  }
-  
-  a:hover {
-    color: rgba(0,0,0,0.7);
-  }
-
-  .icon {
-    fill: rgba(0,0,0,0.4);
   }
 }
