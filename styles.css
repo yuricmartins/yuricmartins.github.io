@@ -22,27 +22,19 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  max-width: 388px;
-  margin: auto;
-  padding-bottom: 48px;
+  gap: 64px;
+  max-width: 404px;
+  margin: 0 auto;
+  padding: 120px 0 48px;
+  animation: fade-in 1s ease 0s 1 forwards;
 }
 
-.intro {
-  padding-bottom: 36px;
-  animation: intro-fade-in 1s ease 0s 1 forwards;
-}
-
-@keyframes intro-fade-in {
+@keyframes fade-in {
   0% {
       opacity: 0;
       transform: translateY(16px);
@@ -53,34 +45,28 @@ body {
   }
 }
 
-h1 {
+h1, h2 {
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 1.125rem;
 }
 
-p + p {
-  margin-top: 18px;
+p + p,
+li + li {
+  margin-top: 1.125rem;
 }
 
 a {
   color: inherit;
   text-decoration-line: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 4px;
-  /* Text color at 20% when idle, full text color on hover */
-  text-decoration-color: color-mix(in srgb, currentColor 20%, transparent);
+  /* Text color at 10% when idle, 40% on hover */
+  text-decoration-color: color-mix(in srgb, currentColor 10%, transparent);
   transition: text-decoration-color 300ms ease-out;
 }
 
 a:hover {
-  text-decoration-color: currentColor;
-}
-
-em {
-  font-family: 'Source Serif Pro', serif;
-  font-style: italic;
-  font-size: 0.96875rem;
-  line-height: 1.125rem;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
 }
 
 @media screen and (max-width: 600px) {
@@ -88,6 +74,5 @@ em {
   .content {
     margin-left: 24px;
     margin-right: 24px;
-    padding-bottom: 0px;
   }
 }
